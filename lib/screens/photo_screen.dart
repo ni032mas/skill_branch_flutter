@@ -12,7 +12,9 @@ class FullScreenImage extends StatefulWidget {
       this.altDescription = '',
       this.userName = '',
       this.name = '',
-      this.userPhoto = ''});
+      this.userPhoto = '',
+      Key key})
+      : super(key: key);
 
   final String photo;
   final String altDescription;
