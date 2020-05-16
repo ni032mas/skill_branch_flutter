@@ -7,13 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage(
-      {this.photo = '',
-      this.altDescription = '',
-      this.userName = '',
-      this.name = '',
-      this.userPhoto = '',
-      Key key})
+  FullScreenImage({this.photo = '', this.altDescription = '', this.userName = '', this.name = '', this.userPhoto = '', Key key, this.heroTag})
       : super(key: key);
 
   final String photo;
@@ -21,12 +15,39 @@ class FullScreenImage extends StatefulWidget {
   final String userName;
   final String name;
   final String userPhoto;
+  final String heroTag;
 
   @override
   _FullScreenImageState createState() => _FullScreenImageState();
 }
 
-class _FullScreenImageState extends State<FullScreenImage> {
+class _FullScreenImageState extends State<FullScreenImage> with TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _opacityUserAvatar;
+  Animation<double> _opacityUserCredentials;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    _opacityUserAvatar = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.5, curve: Curves.ease)));
+    _opacityUserCredentials =
+        Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Interval(0.5, 1.0, curve: Curves.ease)));
+    _playAnimation();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playAnimation() async {
+    try {
+      await _controller.forward().orCancel;
+    } on TickerCanceled {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,9 +57,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Photo(
-              photoLink: widget.photo,
-            ),
+            Photo(photoLink: widget.photo, heroTag: widget.heroTag),
             const SizedBox(
               height: 10,
             ),
@@ -54,7 +73,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
             const SizedBox(
               height: 9,
             ),
-            _buildPhotoMeta(),
+            AnimatedBuilder(animation: _controller, builder: _buildPhotoMeta),
             const SizedBox(
               height: 17,
             ),
@@ -83,27 +102,33 @@ class _FullScreenImageState extends State<FullScreenImage> {
     );
   }
 
-  Widget _buildPhotoMeta() {
+  Widget _buildPhotoMeta(BuildContext context, Widget child) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
         children: <Widget>[
-          UserAvatar(widget.userPhoto),
+          Opacity(
+            opacity: _opacityUserAvatar.value,
+            child: UserAvatar(widget.userPhoto),
+          ),
           SizedBox(
             width: 10,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                widget.name,
-                style: AppStyles.h1Black,
-              ),
-              Text(
-                "@${widget.userName}",
-                style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
-              )
-            ],
+          Opacity(
+            opacity: _opacityUserCredentials.value,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.name,
+                  style: AppStyles.h1Black,
+                ),
+                Text(
+                  "@${widget.userName}",
+                  style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -139,8 +164,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
     return Container(
       alignment: Alignment.center,
       height: 36,
-      decoration: BoxDecoration(
-          color: AppColors.dodgerBlue, borderRadius: BorderRadius.circular(7)),
+      decoration: BoxDecoration(color: AppColors.dodgerBlue, borderRadius: BorderRadius.circular(7)),
       child: Text(
         text,
         style: AppStyles.h4.copyWith(color: AppColors.white),
