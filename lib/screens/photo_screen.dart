@@ -73,7 +73,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
             const SizedBox(
               height: 9,
             ),
-            AnimatedBuilder(animation: _controller, builder: _buildPhotoMeta),
+            _buildPhotoMeta(),
             const SizedBox(
               height: 17,
             ),
@@ -102,34 +102,40 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
     );
   }
 
-  Widget _buildPhotoMeta(BuildContext context, Widget child) {
+  Widget _buildPhotoMeta() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
         children: <Widget>[
-          Opacity(
-            opacity: _opacityUserAvatar.value,
-            child: UserAvatar(widget.userPhoto),
-          ),
-          SizedBox(
+          AnimatedBuilder(
+              animation: _controller,
+              child: UserAvatar(widget.userPhoto),
+              builder: (context, child) => Opacity(
+                    opacity: _opacityUserAvatar.value,
+                    child: child,
+                  )),
+          const SizedBox(
             width: 10,
           ),
-          Opacity(
-            opacity: _opacityUserCredentials.value,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.name,
-                  style: AppStyles.h1Black,
-                ),
-                Text(
-                  "@${widget.userName}",
-                  style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
-                )
-              ],
-            ),
-          )
+          AnimatedBuilder(
+              animation: _controller,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.name,
+                    style: AppStyles.h1Black,
+                  ),
+                  Text(
+                    "@${widget.userName}",
+                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                  )
+                ],
+              ),
+              builder: (context, child) => Opacity(
+                    opacity: _opacityUserCredentials.value,
+                    child: child,
+                  )),
         ],
       ),
     );
