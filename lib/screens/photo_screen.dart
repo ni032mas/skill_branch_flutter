@@ -110,8 +110,8 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
           AnimatedBuilder(
               animation: _controller,
               child: UserAvatar(widget.userPhoto),
-              builder: (context, child) => Opacity(
-                    opacity: _opacityUserAvatar.value,
+              builder: (context, child) => FadeTransition(
+                    opacity: _opacityUserAvatar,
                     child: child,
                   )),
           const SizedBox(
@@ -132,8 +132,8 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
                   )
                 ],
               ),
-              builder: (context, child) => Opacity(
-                    opacity: _opacityUserCredentials.value,
+              builder: (context, child) => FadeTransition(
+                    opacity: _opacityUserCredentials,
                     child: child,
                   )),
         ],
