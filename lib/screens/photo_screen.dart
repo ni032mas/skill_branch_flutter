@@ -57,22 +57,13 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Photo(photoLink: widget.photo, heroTag: widget.heroTag),
-            const SizedBox(
-              height: 10,
-            ),
+            Hero(tag: widget.heroTag, child: Photo(photoLink: widget.photo)),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                widget.altDescription,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: AppStyles.h3,
-              ),
+              child: Text(widget.altDescription, maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3),
             ),
-            const SizedBox(
-              height: 9,
-            ),
+            const SizedBox(height: 9),
             _buildPhotoMeta(),
             const SizedBox(
               height: 17,

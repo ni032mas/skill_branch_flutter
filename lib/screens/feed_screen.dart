@@ -53,10 +53,7 @@ class _FeedState extends State<Feed> {
                           heroTag: "$kFlutterDash$index",
                         )));
           },
-          child: Photo(
-            photoLink: kFlutterDash,
-            heroTag: "$kFlutterDash$index",
-          ),
+          child: Hero(tag: "$kFlutterDash$index", child: Photo(photoLink: kFlutterDash)),
         ),
         _buildPhotoMeta(),
         Padding(
