@@ -65,7 +65,7 @@ class _FeedState extends State<Feed> {
             'This is Flutter dash. I love him :)',
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: AppStyles.h3.copyWith(color: AppColors.manatee),
+            style: Theme.of(context).textTheme.headline3.copyWith(color: AppColors.manatee),
           ),
         )
       ],
@@ -89,11 +89,11 @@ class _FeedState extends State<Feed> {
                 children: <Widget>[
                   Text(
                     'Aleksandr Marmyshev',
-                    style: AppStyles.h2Black,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                   Text(
                     '@ni032mas',
-                    style: AppStyles.h2Black,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                 ],
               )

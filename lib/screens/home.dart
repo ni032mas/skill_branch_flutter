@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                   color: AppColors.mercury,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('No connection internet', style: AppStyles.h3),
+                child: Text('No connection internet', style: Theme.of(context).textTheme.headline3),
               ),
             ),
           );

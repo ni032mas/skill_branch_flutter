@@ -92,7 +92,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(widget.altDescription, maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3),
+              child: Text(widget.altDescription, maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3),
             ),
             const SizedBox(height: 9),
             _buildPhotoMeta(),
@@ -129,7 +129,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
       centerTitle: true,
       title: Text(
         'Photo',
-        style: AppStyles.h2Black,
+        style: Theme.of(context).textTheme.headline2,
       ),
     );
   }
@@ -156,11 +156,11 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
                 children: <Widget>[
                   Text(
                     widget.name,
-                    style: AppStyles.h1Black,
+                    style: Theme.of(context).textTheme.headline1,
                   ),
                   Text(
                     "@${widget.userName}",
-                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                    style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee),
                   )
                 ],
               ),
@@ -253,7 +253,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
         decoration: BoxDecoration(color: AppColors.dodgerBlue, borderRadius: BorderRadius.circular(7)),
         child: Text(
           text,
-          style: AppStyles.h4.copyWith(color: AppColors.white),
+          style: Theme.of(context).textTheme.headline4.copyWith(color: AppColors.white),
         ),
       ),
     );

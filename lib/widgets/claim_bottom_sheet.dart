@@ -19,7 +19,7 @@ class ClaimBottomSheet extends StatelessWidget {
                   child: InkWell(
                       child: Container(
                           padding: EdgeInsets.all(15),
-                          child: Center(child: Text(itemsBottomSheet[index].toUpperCase(), style: AppStyles.h3))),
+                          child: Center(child: Text(itemsBottomSheet[index].toUpperCase(), style: Theme.of(context).textTheme.headline3))),
                       onTap: () {
                         Navigator.pop(context);
                       })))),
