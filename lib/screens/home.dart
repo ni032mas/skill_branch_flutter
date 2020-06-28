@@ -104,15 +104,9 @@ class _HomeState extends State<Home> {
           curve: Curves.ease,
           currentTab: currentTab,
           onItemSelected: (int index) async {
-            if (index == 1) {
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                return DemoScreen();
-              }));
-            } else {
-              setState(() {
-                currentTab = index;
-              });
-            }
+            setState(() {
+              currentTab = index;
+            });
           },
           items: _tabs),
       body: PageStorage(bucket: bucket, child: pages[currentTab]),
