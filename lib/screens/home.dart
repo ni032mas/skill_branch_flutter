@@ -4,7 +4,6 @@ import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/app_icons.dart';
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/styles.dart';
-import 'package:FlutterGalleryApp/widgets/demo_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
