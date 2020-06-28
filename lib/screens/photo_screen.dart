@@ -5,9 +5,38 @@ import 'package:FlutterGalleryApp/widgets/like_button.dart';
 import 'package:FlutterGalleryApp/widgets/photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+
+class FullScreenImageArguments {
+  final String photo;
+  final String altDescription;
+  final String userName;
+  final String name;
+  final String userPhoto;
+  final String heroTag;
+  final Key key;
+  final RouteSettings routeSettings;
+
+  FullScreenImageArguments(
+      {this.photo,
+      this.altDescription,
+      this.userName,
+      this.name,
+      this.userPhoto,
+      this.heroTag,
+      this.key,
+      this.routeSettings});
+}
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage({this.photo = '', this.altDescription = '', this.userName = '', this.name = '', this.userPhoto = '', Key key, this.heroTag})
+  FullScreenImage(
+      {this.photo = '',
+      this.altDescription = '',
+      this.userName = '',
+      this.name = '',
+      this.userPhoto = '',
+      Key key,
+      this.heroTag})
       : super(key: key);
 
   final String photo;
@@ -30,9 +59,10 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
   void initState() {
     super.initState();
     _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
-    _opacityUserAvatar = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.5, curve: Curves.ease)));
-    _opacityUserCredentials =
-        Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Interval(0.5, 1.0, curve: Curves.ease)));
+    _opacityUserAvatar = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.5, curve: Curves.ease)));
+    _opacityUserCredentials = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(0.5, 1.0, curve: Curves.ease)));
     _playAnimation();
   }
 
@@ -76,8 +106,40 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
   }
 
   AppBar _buildAppBar() {
+    const List<String> itemsBottomSheet = ['adult', 'harm', 'bully', 'spam', 'copyright', 'hate'];
     return AppBar(
       elevation: 0,
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: AppColors.grayChateau,
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      decoration: BoxDecoration(color: AppColors.mercury, borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: List.generate(
+                              itemsBottomSheet.length,
+                              (index) => Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                      child: Container(
+                                          padding: EdgeInsets.all(15),
+                                          child: Center(
+                                              child: Text(itemsBottomSheet[index].toUpperCase(), style: AppStyles.h3))),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      })))),
+                    );
+                  });
+            })
+      ],
       leading: IconButton(
           icon: Icon(
             CupertinoIcons.back,
@@ -139,33 +201,88 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Expanded(child: LikeButton()),
-          Expanded(
-              child: GestureDetector(
-            child: _buildButton('Save'),
-            onTap: () {},
-          )),
           const SizedBox(
-            width: 12,
+            width: 14,
           ),
           Expanded(
               child: GestureDetector(
-            child: _buildButton('Visit'),
+            child: _buildButton('Save', () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Downloading photos'),
+                      content: Text("Are you sure you want to upload a photo?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Download"),
+                          onPressed: () {
+                            _savePhoto();
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Close"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    );
+                  });
+            }),
             onTap: () {},
           )),
+          const SizedBox(width: 14),
+          Expanded(
+            child: _buildButton('Visit', () async {
+              OverlayState overlayState = Overlay.of(context);
+              OverlayEntry overlayEntry = OverlayEntry(builder: (BuildContext context) {
+                return Positioned(
+                  top: MediaQuery.of(context).viewInsets.top + 50,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.mercury,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text('SkillBranch'),
+                    ),
+                  ),
+                );
+              });
+              overlayState.insert(overlayEntry);
+              await new Future.delayed(Duration(seconds: 1));
+              overlayEntry?.remove();
+            }),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildButton(String text) {
-    return Container(
-      alignment: Alignment.center,
-      height: 36,
-      decoration: BoxDecoration(color: AppColors.dodgerBlue, borderRadius: BorderRadius.circular(7)),
-      child: Text(
-        text,
-        style: AppStyles.h4.copyWith(color: AppColors.white),
+  Widget _buildButton(String text, VoidCallback callback) {
+    return GestureDetector(
+      onTap: callback,
+      child: Container(
+        alignment: Alignment.center,
+        height: 36,
+        decoration: BoxDecoration(color: AppColors.dodgerBlue, borderRadius: BorderRadius.circular(7)),
+        child: Text(
+          text,
+          style: AppStyles.h4.copyWith(color: AppColors.white),
+        ),
       ),
     );
+  }
+
+  void _savePhoto() async {
+    GallerySaver.saveImage(widget.photo).then((bool success) {
+      setState(() {});
+    });
   }
 }

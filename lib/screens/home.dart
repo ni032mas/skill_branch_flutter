@@ -1,18 +1,70 @@
+import 'dart:async';
+
+import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/app_icons.dart';
 import 'package:FlutterGalleryApp/res/colors.dart';
+import 'package:FlutterGalleryApp/res/styles.dart';
+import 'package:FlutterGalleryApp/widgets/demo_screen.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'feed_screen.dart';
 
 class Home extends StatefulWidget {
+  Home(this.onConnectivityChanged);
+
+  final Stream<ConnectivityResult> onConnectivityChanged;
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  StreamSubscription subscription;
   int currentTab = 0;
   final PageStorageBucket bucket = PageStorageBucket();
+  final ConnectivityOverlay _connectivityOverlay = ConnectivityOverlay();
+
+  @override
+  void initState() {
+    super.initState();
+    subscription = widget.onConnectivityChanged.listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+          _connectivityOverlay.removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+          _connectivityOverlay.removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          var child = Positioned(
+            top: MediaQuery.of(context).viewInsets.top + 50,
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                decoration: BoxDecoration(
+                  color: AppColors.mercury,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text('No connection internet', style: AppStyles.h3),
+              ),
+            ),
+          );
+          _connectivityOverlay.showOverlay(context, child);
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
 
   List<Widget> pages = [
     Feed(
@@ -51,10 +103,16 @@ class _HomeState extends State<Home> {
           itemCornerRadius: 8,
           curve: Curves.ease,
           currentTab: currentTab,
-          onItemSelected: (int index) {
-            setState(() {
-              currentTab = index;
-            });
+          onItemSelected: (int index) async {
+            if (index == 1) {
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                return DemoScreen();
+              }));
+            } else {
+              setState(() {
+                currentTab = index;
+              });
+            }
           },
           items: _tabs),
       body: PageStorage(bucket: bucket, child: pages[currentTab]),
@@ -74,8 +132,12 @@ class BottomNavyBar extends StatelessWidget {
       this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
       @required this.items,
       @required this.onItemSelected,
-      this.curve = Curves.linear})
-      : super(key: key);
+      this.curve = Curves.linear}) {
+    assert(items != null);
+    assert(items.length >= 2 && items.length <= 5);
+    assert(onItemSelected != null);
+    assert(curve != null);
+  }
 
   final Color backgroundColor;
   final bool showElevation;
@@ -90,8 +152,10 @@ class BottomNavyBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = (backgroundColor == null) ? Theme.of(context).bottomAppBarColor : backgroundColor;
     return Container(
-      decoration: BoxDecoration(color: backgroundColor, boxShadow: [if (showElevation) const BoxShadow(color: Colors.black12, blurRadius: 2)]),
+      decoration: BoxDecoration(
+          color: bgColor, boxShadow: [if (showElevation) const BoxShadow(color: Colors.black12, blurRadius: 2)]),
       child: SafeArea(
           child: Container(
         width: double.infinity,
@@ -106,7 +170,7 @@ class BottomNavyBar extends StatelessWidget {
               child: _ItemWidget(
                 isSelected: currentTab == index ? true : false,
                 item: item,
-                backgroundColor: backgroundColor,
+                backgroundColor: bgColor,
                 animationDuration: animatedDuration,
                 itemCornerRadius: itemCornerRadius,
                 curve: curve,
@@ -121,7 +185,8 @@ class BottomNavyBar extends StatelessWidget {
 
 class _ItemWidget extends StatelessWidget {
   _ItemWidget(
-      {@required this.isSelected,
+      {Key key,
+      @required this.isSelected,
       @required this.item,
       @required this.backgroundColor,
       @required this.animationDuration,
@@ -132,7 +197,8 @@ class _ItemWidget extends StatelessWidget {
         assert(isSelected != null, 'isSelected is null'),
         assert(backgroundColor != null, 'backgroundColor is null'),
         assert(item != null, 'item is null'),
-        assert(itemCornerRadius != null, 'itemCornerRadius is null');
+        assert(itemCornerRadius != null, 'itemCornerRadius is null'),
+        super(key: key);
 
   final bool isSelected;
   final BottomNavyBarItem item;
@@ -149,7 +215,8 @@ class _ItemWidget extends StatelessWidget {
       duration: animationDuration,
       curve: curve,
       decoration: BoxDecoration(
-          color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor, borderRadius: BorderRadius.circular(itemCornerRadius)),
+          color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
+          borderRadius: BorderRadius.circular(itemCornerRadius)),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -186,7 +253,8 @@ class BottomNavyBarItem {
   final Color inactiveColor;
   final TextAlign textAlign;
 
-  BottomNavyBarItem({@required this.asset, @required this.title, this.activeColor = Colors.blue, this.inactiveColor, this.textAlign})
+  BottomNavyBarItem(
+      {@required this.asset, @required this.title, this.activeColor = Colors.blue, this.inactiveColor, this.textAlign})
       : assert(asset != null, 'asset is null'),
         assert(title != null, 'title is null');
 }

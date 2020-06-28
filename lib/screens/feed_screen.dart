@@ -4,7 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 
-const String kFlutterDash = "https://flutter.dev/assets/404/dash_nest-c64796b59b65042a2b40fae5764c13b7477a592db79eaf04c86298dcb75b78ea.png";
+const String kFlutterDash =
+    "https://flutter.dev/assets/404/dash_nest-c64796b59b65042a2b40fae5764c13b7477a592db79eaf04c86298dcb75b78ea.png";
 
 class Feed extends StatefulWidget {
   Feed({Key key}) : super(key: key);
@@ -41,19 +42,21 @@ class _FeedState extends State<Feed> {
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FullScreenImage(
-                          photo: kFlutterDash,
-                          name: 'Aleksandr',
-                          userName: "ni032mas",
-                          altDescription: "This is Flutter dash",
-                          userPhoto: 'https://sun9-70.userapi.com/c628121/v628121093/b580/fYX7xll2-nI.jpg',
-                          heroTag: "$kFlutterDash$index",
-                        )));
+            Navigator.pushNamed(context, '/fullScreenImage',
+                arguments: FullScreenImageArguments(
+                  routeSettings: RouteSettings(arguments: kFlutterDash),
+                  photo: kFlutterDash,
+                  name: 'Aleksandr',
+                  userName: "ni032mas",
+                  altDescription: "This is Flutter dash",
+                  userPhoto:
+                      'https://sun9-70.userapi.com/c628121/v628121093/b580/fYX7xll2-nI.jpg',
+                  heroTag: "$kFlutterDash$index",
+                ));
           },
-          child: Hero(tag: "$kFlutterDash$index", child: Photo(photoLink: kFlutterDash)),
+          child: Hero(
+              tag: "$kFlutterDash$index",
+              child: Photo(photoLink: kFlutterDash)),
         ),
         _buildPhotoMeta(),
         Padding(
@@ -77,7 +80,8 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              UserAvatar('https://sun9-70.userapi.com/c628121/v628121093/b580/fYX7xll2-nI.jpg'),
+              UserAvatar(
+                  'https://sun9-70.userapi.com/c628121/v628121093/b580/fYX7xll2-nI.jpg'),
               SizedBox(width: 6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
