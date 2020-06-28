@@ -1,5 +1,6 @@
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:FlutterGalleryApp/widgets/user_avatar.dart';
 import 'package:FlutterGalleryApp/widgets/like_button.dart';
 import 'package:FlutterGalleryApp/widgets/photo.dart';
@@ -106,7 +107,6 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
   }
 
   AppBar _buildAppBar() {
-    const List<String> itemsBottomSheet = ['adult', 'harm', 'bully', 'spam', 'copyright', 'hate'];
     return AppBar(
       elevation: 0,
       actions: <Widget>[
@@ -116,28 +116,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
               color: AppColors.grayChateau,
             ),
             onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      decoration: BoxDecoration(color: AppColors.mercury, borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(
-                              itemsBottomSheet.length,
-                              (index) => Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                      child: Container(
-                                          padding: EdgeInsets.all(15),
-                                          child: Center(
-                                              child: Text(itemsBottomSheet[index].toUpperCase(), style: AppStyles.h3))),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      })))),
-                    );
-                  });
+              showModalBottomSheet(context: context, builder: (context) => ClaimBottomSheet());
             })
       ],
       leading: IconButton(
