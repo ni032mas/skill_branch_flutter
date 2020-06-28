@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Home(Connectivity().onConnectivityChanged),
-      theme: ThemeData(textTheme: AppStyles.buildAppTextTheme()),
+      theme: ThemeData(textTheme: buildAppTextTheme()),
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
           return Scaffold(
