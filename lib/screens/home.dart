@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/app_icons.dart';
 import 'package:FlutterGalleryApp/res/colors.dart';
-import 'package:FlutterGalleryApp/res/styles.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +48,7 @@ class _HomeState extends State<Home> {
                   color: AppColors.mercury,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('No connection internet', style: Theme.of(context).textTheme.headline3),
+                child: Text('No internet connection', style: Theme.of(context).textTheme.headline3),
               ),
             ),
           );

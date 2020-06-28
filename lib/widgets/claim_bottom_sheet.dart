@@ -1,5 +1,4 @@
 import 'package:FlutterGalleryApp/res/colors.dart';
-import 'package:FlutterGalleryApp/res/styles.dart';
 import 'package:flutter/material.dart';
 
 class ClaimBottomSheet extends StatelessWidget {

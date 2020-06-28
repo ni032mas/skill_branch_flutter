@@ -1,4 +1,3 @@
-import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:flutter/material.dart';
 
 import 'app.dart';
