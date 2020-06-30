@@ -92,7 +92,8 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(widget.altDescription, maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3),
+              child: Text(widget.altDescription,
+                  maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3),
             ),
             const SizedBox(height: 9),
             _buildPhotoMeta(),
@@ -184,34 +185,31 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
             width: 14,
           ),
           Expanded(
-              child: GestureDetector(
-            child: _buildButton('Save', () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Downloading photos'),
-                      content: Text("Are you sure you want to upload a photo?"),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text("Download"),
-                          onPressed: () {
-                            _savePhoto();
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Close"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    );
-                  });
-            }),
-            onTap: () {},
-          )),
+              child: _buildButton('Save', () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Downloading photos'),
+                    content: Text("Are you sure you want to upload a photo?"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("Download"),
+                        onPressed: () {
+                          _savePhoto();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                });
+          })),
           const SizedBox(width: 14),
           Expanded(
             child: _buildButton('Visit', () async {
